@@ -8,7 +8,7 @@ pkgname = 'datastore.aws'
 # gather the package information
 main_py = open('datastore/aws/__init__.py').read()
 metadata = dict(re.findall("__([a-z]+)__ = '([^']+)'", main_py))
-packages = filter(lambda p: p.startswith(pkgname), find_packages())
+packages = filter(lambda p: p.startswith('datastore'), find_packages())
 
 # convert the readme to pypi compatible rst
 try:
@@ -35,7 +35,8 @@ setup(
     's3',
   ],
   packages=packages,
-  install_requires=['datastore>=0.3.0', 'boto>=2.5.2'],
+  namespace_packages=['datastore'],
+  install_requires=['datastore>=0.3.3', 'boto>=2.5.2'],
   test_suite='datastore.aws.test',
   license='MIT License',
   classifiers=[

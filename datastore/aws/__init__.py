@@ -1,5 +1,5 @@
 
-__version__ = '0.1.0'
+__version__ = '0.1.2'
 __author__ = 'Juan Batiz-Benet'
 __email__ = 'juan@benet.ai'
 __doc__ = '''
@@ -17,7 +17,7 @@ Tested with:
 from boto.s3.key import Key as S3Key
 from boto.exception import S3ResponseError
 
-import datastore
+import datastore.core
 
 
 class S3BucketDatastore(datastore.Datastore):
@@ -26,6 +26,26 @@ class S3BucketDatastore(datastore.Datastore):
   The s3 interface is very similar to datastore's. The only differences are:
   - values must be strings (SerializerShimDatastore)
   - keys must be converted into strings
+
+  Hello World:
+
+      >>> import datastore.aws
+      >>> from boto.s3.connection import S3Connection
+      >>>
+      >>> s3conn = S3Connection('<aws access key>', '<aws secret key>')
+      >>> s3bucket = s3conn.get_bucket('<bucket name>')
+      >>> ds = datastore.aws.S3BucketDatastore(s3bucket)
+      >>>
+      >>> hello = datastore.Key('hello')
+      >>> ds.put(hello, 'world')
+      >>> ds.contains(hello)
+      True
+      >>> ds.get(hello)
+      'world'
+      >>> ds.delete(hello)
+      >>> ds.get(hello)
+      None
+
   '''
 
   def __init__(self, s3bucket):
@@ -115,26 +135,3 @@ class S3BucketDatastore(datastore.Datastore):
       boalean whether the object exists
     '''
     return self._s3key(key).exists()
-
-
-'''
-Hello World:
-
-    >>> import datastore.aws
-    >>> from boto.s3.connection import S3Connection
-    >>>
-    >>> s3conn = S3Connection('<aws access key>', '<aws secret key>')
-    >>> s3bucket = s3conn.get_bucket('<bucket name>')
-    >>> ds = datastore.aws.S3BucketDatastore(s3bucket)
-    >>>
-    >>> hello = datastore.Key('hello')
-    >>> ds.put(hello, 'world')
-    >>> ds.contains(hello)
-    True
-    >>> ds.get(hello)
-    'world'
-    >>> ds.delete(hello)
-    >>> ds.get(hello)
-    None
-
-'''
